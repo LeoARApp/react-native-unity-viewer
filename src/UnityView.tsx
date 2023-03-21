@@ -1,5 +1,6 @@
 import * as React from 'react'
-import { NativeModules, requireNativeComponent, View, ViewProps, ViewPropTypes } from 'react-native'
+import { NativeModules, requireNativeComponent, View, ViewProps } from 'react-native'
+import { ViewPropTypes } from 'deprecated-react-native-prop-types'
 import * as PropTypes from 'prop-types'
 import MessageHandler from './MessageHandler'
 import { UnityModule, UnityViewMessage } from './UnityModule'
