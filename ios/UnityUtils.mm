@@ -8,6 +8,8 @@
 // to get this section emitted at right time and so avoid LC_ENCRYPTION_INFO size miscalculation
 static const int constsection = 0;
 
+static bool player_created = false;
+
 bool unity_inited = false;
 
 int g_argc;
@@ -89,6 +91,7 @@ static BOOL _isUnityReady = NO;
     if (!_isUnityReady) {
         return;
     }
+
     UnityAppController* unityAppController = GetAppController();
 
     UIApplication* application = [UIApplication sharedApplication];
@@ -136,25 +139,28 @@ static BOOL _isUnityReady = NO;
         completed();
     }];
 
-    if (UnityIsInited()) {
+   if ((player_created) || UnityIsInited()) {
         return;
     }
+    player_created = true;
 
     dispatch_async(dispatch_get_main_queue(), ^{
         UIApplication* application = [UIApplication sharedApplication];
 
-        // Always keep RN window in top
-        application.keyWindow.windowLevel = UIWindowLevelNormal + 1;
+        application.keyWindow.windowLevel = UIWindowLevelNormal;
 
         InitUnity();
-        
+
         UnityAppController *controller = GetAppController();
         [controller application:application didFinishLaunchingWithOptions:nil];
         [controller applicationDidBecomeActive:application];
-        
+
+        // Do this in order to keep RN window at top
+        [controller window].windowLevel = UIWindowLevelNormal - 1;
+
         // Makes RN window key window to handle events
         [application.windows[1] makeKeyWindow];
-        
+
         [UnityUtils listenAppState];
     });
 }
