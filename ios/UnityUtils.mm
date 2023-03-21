@@ -17,7 +17,9 @@ char** g_argv;
 
 void UnityInitTrampoline();
 
+#if !TARGET_OS_SIMULATOR
 UnityFramework* ufw;
+#endif // !TARGET_OS_SIMULATOR
 
 extern "C" void InitArgs(int argc, char* argv[])
 {
@@ -30,6 +32,7 @@ extern "C" bool UnityIsInited()
     return unity_inited;
 }
 
+#if !TARGET_OS_SIMULATOR
 UnityFramework* UnityFrameworkLoad() {
     NSString* bundlePath = nil;
     bundlePath = [[NSBundle mainBundle] bundlePath];
@@ -41,6 +44,7 @@ UnityFramework* UnityFrameworkLoad() {
     UnityFramework* ufw = [bundle.principalClass getInstance];
     return ufw;
 }
+#endif // !TARGET_OS_SIMULATOR
 
 extern "C" void InitUnity()
 {
